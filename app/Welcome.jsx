@@ -1,12 +1,14 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "../constants/theme";
 import { hp, wp } from "../helpers/common";
 import Button from "../components/Button";
+import { useRouter } from "expo-router";
 
 const Welcome = () => {
+    const router = useRouter();
   return (
     <ScreenWrapper bg={"white"}>
       <StatusBar style="dark" />
@@ -27,11 +29,27 @@ const Welcome = () => {
         </View>
         {/* footer */}
         <View style={styles.footer}>
-            <Button 
+          <Button
             title="Get Started"
-            buttonStyle={{marginHorizontal:wp(3)}}
-            onpress={()=>{}}
-            />
+            buttonStyle={{ marginHorizontal: wp(3) }}
+            onpress={() => router.push("signUp")}
+          />
+          <View style={styles.bottomTextContainer}>
+            <Text style={styles.loginText}>Already have an account?</Text>
+            <Pressable onPress={() => router.push("login")}>
+              <Text
+                style={[
+                  styles.loginText,
+                  {
+                    color: theme.colors.primaryDark,
+                    fontWeight: theme.fonts.semibold,
+                  },
+                ]}
+              >
+                Login
+              </Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </ScreenWrapper>
@@ -53,20 +71,31 @@ const styles = StyleSheet.create({
     height: hp(30),
     alignSelf: "center",
   },
-  title:{
-    color:theme.colors.text,
-    fontSize:hp(4),
-    textAlign:"center",
-    fontWeight:theme.fonts.extraBold
+  title: {
+    color: theme.colors.text,
+    fontSize: hp(4),
+    textAlign: "center",
+    fontWeight: theme.fonts.extraBold,
   },
-  puncline:{
-    color:theme.colors.text,
-    fontSize:hp(1.7),
-    textAlign:"center",
-    paddingHorizontal:wp(10),
+  puncline: {
+    color: theme.colors.text,
+    fontSize: hp(1.7),
+    textAlign: "center",
+    paddingHorizontal: wp(10),
   },
-  footer:{
-    gap:30,
-    width:wp(100),
-  }
+  footer: {
+    gap: 30,
+    width: wp(100),
+  },
+  bottomTextContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
+  },
+  loginText: {
+    textAlign: "center",
+    color: theme.colors.text,
+    fontSize: hp(1.6),
+  },
 });
