@@ -1,0 +1,2 @@
+export const supabaseUrl = "https://smdjnmgswimtmnxhoply.supabase.co";
+export const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtZGpubWdzd2ltdG1ueGhvcGx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY3NjA4MzgsImV4cCI6MjA1MjMzNjgzOH0.bV01C9KsPjBKQOH6_XQv-cf_qAXHpY7C8eKMhlmvAN0"

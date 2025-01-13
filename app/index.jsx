@@ -1,18 +1,13 @@
 import React from "react";
-import { useRouter } from "expo-router";
-import { Button, StyleSheet, Text, View } from "react-native";
-import ScreenWrapper from "../components/ScreenWrapper";
+import { View } from "react-native";
+import Loading from "../components/Loading";
 
 const index = () => {
-  const router = useRouter();
   return (
-    <ScreenWrapper>
-      <Text>index</Text>
-      <Button title="Welcome" onPress={() => router.push("Welcome")} />
-    </ScreenWrapper>
+    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+        <Loading/>
+    </View>
   );
 };
 
 export default index;
-
-const styles = StyleSheet.create({});

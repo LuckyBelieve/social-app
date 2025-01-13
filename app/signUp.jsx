@@ -10,6 +10,7 @@ import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { supabase } from "../lib/superbase";
 
 const SignUp = () => {
   const nameRef = React.useRef();
@@ -17,12 +18,36 @@ const SignUp = () => {
   const passwordRef = React.useRef();
   const [loading, setIsLoading] = useState(false);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if(!emailRef.current || !passwordRef.current){
       Alert.alert("Sign up","Please fill all fields");
       return;
     }
     // good to go
+    let name = nameRef.current.trim();
+    let email = emailRef.current.trim();
+    let password = passwordRef.current.trim();
+
+    setIsLoading(true);
+
+    const {data:{session},error} = await supabase.auth.signUp({
+      email,
+      password,
+      options:{
+        data:{
+          name
+        }
+      }
+    })
+
+    setIsLoading(false);
+    if (error) {
+      Alert.alert("Sign Up",error.message);
+      setIsLoading(false);
+    }
+    
+    
+
   };
   return (
     <ScreenWrapper bg={"white"}>

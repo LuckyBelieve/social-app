@@ -10,18 +10,34 @@ import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { supabase } from "../lib/superbase";
 
 const login = () => {
   const emailRef = React.useRef();
   const passwordRef = React.useRef();
   const [loading, setIsLoading] = useState(false);
 
-  const onSubmit = () => {
+  const onSubmit = async() => {
     if(!emailRef.current || !passwordRef.current){
       Alert.alert("Login","Please fill all fields");
       return;
     }
     // good to go
+    const email = emailRef.current.trim();
+    const password = passwordRef.current.trim();
+
+    setIsLoading(true);
+    const { error,data:{session} } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+    setIsLoading(false);
+
+    console.log("session: ",session);
+    if(error){
+      Alert.alert("Login",error.message);
+      setIsLoading(false);
+    }
   };
   return (
     <ScreenWrapper bg={"white"}>
