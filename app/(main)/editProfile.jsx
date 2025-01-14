@@ -89,7 +89,7 @@ const EditProfile = () => {
       : getUserImageSrc(user?.image);
 
   return (
-    <ScreenWrapper>
+    <ScreenWrapper bg={"white"}>
       <View style={styles.container}>
         <ScrollView style={{ flex: 1 }}>
           <Header title={"Edit Profile"} />
