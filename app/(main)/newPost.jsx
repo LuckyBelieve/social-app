@@ -1,4 +1,5 @@
 import {
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -21,6 +22,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { getSupabaseUrl } from "../../services/imageService";
 import { Video } from "expo-av";
+import { createUpdatePost } from "../../services/postService";
 
 const NewPost = () => {
   const { user } = useAuth();
@@ -61,7 +63,7 @@ const NewPost = () => {
       return file.type;
     }
     // check type from remote sites
-    if (file.includes("postImage")) {
+    if (file.includes("postImages")) {
       return "image";
     }
     return "video";
@@ -74,7 +76,29 @@ const NewPost = () => {
   };
 
   //   submission
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    if (!bodyRef.current && !file) {
+      Alert.alert("Post", "Please choose an Image or add post body");
+    }
+    let data = {
+      file,
+      body: bodyRef.current,
+      userId: user?.id,
+    };
+
+    setLoading(true);
+    // create post
+    let res = await createUpdatePost(data);
+    setLoading(false);
+    if(res.success){
+        setFile(null)
+        bodyRef.current = "";
+        editorRef.current.setContentHTML('');
+        router.back();
+    }else{
+        Alert.alert("Post",res.msg)
+    }
+  };
   return (
     <ScreenWrapper bg={"white"}>
       <View style={styles.container}>
@@ -98,7 +122,7 @@ const NewPost = () => {
           <View style={styles.textEditor}>
             <RichTextEditor
               editorRef={editorRef}
-              onChange={(value) => (bodyRef.current = value)}
+              onchange={(value) => (bodyRef.current = value)}
             />
           </View>
           {file && (
