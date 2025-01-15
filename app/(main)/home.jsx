@@ -1,26 +1,43 @@
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import ScreenWrapper from "../../components/ScreenWrapper";
-import BackButton from "../../components/BackButton";
-import Button from "../../components/Button";
-import { useAuth } from "@/context/AuthContext";
-import { supabase } from "@/lib/superbase";
-import { hp, wp } from "@/helpers/common";
-import { theme } from "@/constants/theme";
 import Icon from "@/assets/icons";
-import { useRouter } from "expo-router";
 import Avatar from "@/components/Avatar";
+import { theme } from "@/constants/theme";
+import { useAuth } from "@/context/AuthContext";
+import { hp, wp } from "@/helpers/common";
+import { supabase } from "@/lib/superbase";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import ScreenWrapper from "@/components/ScreenWrapper";
+import { fetchPosts } from "@/services/postService";
+import PostCard from "@/components/PostCard";
+import { FlatList } from "react-native";
 
+let limit = 0;
 const home = () => {
-  const { setAuth,user } = useAuth();
+  const { setAuth, user } = useAuth();
   const router = useRouter();
 
-  const onLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      Alert.alert("Logout", error.message);
-    }
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  // fetching the posts
+  const getPosts = async () => {
+    limit = limit + 10;
+    console.log("limit:", limit);
+
+    const res = await fetchPosts(limit);
+    
+    if (res.success) setPosts(res.data);
   };
+  
   return (
     <ScreenWrapper bg={"white"}>
       <View style={styles.container}>
@@ -28,7 +45,7 @@ const home = () => {
         <View style={styles.header}>
           <Text style={styles.title}>Link Up</Text>
           <View style={styles.icons}>
-            <Pressable onPress={()=>router.push("/notifications")}>
+            <Pressable onPress={() => router.push("/notifications")}>
               <Icon
                 name={"heart"}
                 size={hp(3.2)}
@@ -36,7 +53,7 @@ const home = () => {
                 color={theme.colors.text}
               />
             </Pressable>
-            <Pressable onPress={()=>router.push("/newPost")}>
+            <Pressable onPress={() => router.push("/newPost")}>
               <Icon
                 name={"plus"}
                 size={hp(3.2)}
@@ -44,16 +61,26 @@ const home = () => {
                 color={theme.colors.text}
               />
             </Pressable>
-            <Pressable onPress={()=>router.push("/profile")}>
+            <Pressable onPress={() => router.push("/profile")}>
               <Avatar
                 uri={user?.image}
                 size={hp(4.3)}
                 rounded={theme.radius.sm}
-                style={{borderWidth:2}}
+                style={{ borderWidth: 2 }}
               />
             </Pressable>
           </View>
         </View>
+        {/* posts */}
+        <FlatList
+          data={posts}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listStyle}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <PostCard item={item} currentUser={user} router={router} />
+          )}
+        />
       </View>
     </ScreenWrapper>
   );
