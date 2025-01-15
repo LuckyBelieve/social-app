@@ -8,7 +8,7 @@ import Icon from "@/assets/icons";
 import RenderHtml from "react-native-render-html";
 import { Image } from "expo-image";
 import { getSupabaseUrl } from "@/services/imageService";
-import { Video } from "expo-av";
+import { useVideoPlayer, VideoView } from "expo-video";
 
 const textStyle = {
   color: theme.colors.dark,
@@ -28,15 +28,7 @@ const tagStyle = {
 };
 
 const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
-  const shadowStyles = {
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    elevation: 1,
-  };
+  const player = useVideoPlayer(getSupabaseUrl(item?.file));
 
   const openPostDetails = () => {};
 
@@ -44,7 +36,7 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
   const likes = [];
   const liked = false;
   return (
-    <View style={[styles.container, hasShadow && shadowStyles]}>
+    <View style={[styles.container, hasShadow && styles.shadowStyles]}>
       <View style={styles.header}>
         {/* user info */}
         <View style={styles.userInfo}>
@@ -88,12 +80,13 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
         )}
         {/* post video */}
         {item.file && item.file.includes("postVideos") && (
-          <Video
+          <VideoView
             style={[styles.postMedia, { height: hp(30) }]}
-            source={getSupabaseUrl(item?.file)}
-            useNativeControls
-            resizeMode="cover"
-            isLooping
+            player={player}
+            contentFit="cover"
+            allowsFullscreen
+            allowsPictureInPicture
+            nativeControls={true}
           />
         )}
       </View>
@@ -108,29 +101,17 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
               color={liked ? theme.colors.rose : theme.colors.textLight}
             />
           </TouchableOpacity>
-            <Text style={styles.count}>
-                {likes?.length}
-            </Text>
+          <Text style={styles.count}>{likes?.length}</Text>
         </View>
         <View style={styles.footerButton}>
           <TouchableOpacity>
-            <Icon
-              name={"comment"}
-              size={24}
-              color={theme.colors.textLight}
-            />
+            <Icon name={"comment"} size={24} color={theme.colors.textLight} />
           </TouchableOpacity>
-            <Text style={styles.count}>
-                {0}
-            </Text>
+          <Text style={styles.count}>{0}</Text>
         </View>
         <View style={styles.footerButton}>
           <TouchableOpacity>
-            <Icon
-              name={"share"}
-              size={24}
-              color={theme.colors.textLight}
-            />
+            <Icon name={"share"} size={24} color={theme.colors.textLight} />
           </TouchableOpacity>
         </View>
       </View>
@@ -152,6 +133,15 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: theme.colors.gray,
     shadowColor: "#000",
+  },
+  shadowStyles: {
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 1,
   },
   header: {
     flexDirection: "row",

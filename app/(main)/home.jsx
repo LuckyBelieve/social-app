@@ -20,6 +20,7 @@ const home = () => {
   const router = useRouter();
 
   const [posts, setPosts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
 
   const handlePostEvent = async (payload) => {
     if (payload.eventType === "INSERT" && payload?.new?.id) {
@@ -34,7 +35,7 @@ const home = () => {
   };
 
   useEffect(() => {
-     const postChannel = supabase
+    const postChannel = supabase
       .channel("posts")
       .on(
         "postgres_changes",
@@ -42,7 +43,6 @@ const home = () => {
         handlePostEvent
       )
       .subscribe();
-    getPosts();
 
     return () => {
       postChannel.unsubscribe();
@@ -51,12 +51,15 @@ const home = () => {
 
   // fetching the posts
   const getPosts = async () => {
-    limit = limit + 10;
-    console.log("limit:", limit);
+    if (!hasMore) return null;
+    limit = limit + 3;
 
     const res = await fetchPosts(limit);
 
-    if (res.success) setPosts(res.data);
+    if (res.success) {
+      if (posts.length === res.data.length) setHasMore(false);
+      setPosts(res.data);
+    }
   };
 
   return (
@@ -101,10 +104,21 @@ const home = () => {
           renderItem={({ item }) => (
             <PostCard item={item} currentUser={user} router={router} />
           )}
+          onEndReached={() => {
+            getPosts();
+            console.log("got to the end");
+          }}
+          onEndReachedThreshold={0}
           ListFooterComponent={
-            <View style={{ marginVertical: posts.length === 0 ? 200 : 30 }}>
-              <Loading />
-            </View>
+            hasMore ? (
+              <View style={{ marginVertical: posts.length === 0 ? 200 : 30 }}>
+                <Loading />
+              </View>
+            ) : (
+              <View style={{ marginVertical: 30 }}>
+                <Text style={styles.noPosts}>no more posts</Text>
+              </View>
+            )
           }
         />
       </View>
