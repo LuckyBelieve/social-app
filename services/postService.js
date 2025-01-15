@@ -18,7 +18,6 @@ export const createUpdatePost = async (post) => {
       .upsert(post)
       .select()
       .single();
-
     if (data && !error) return { success: true, data: data };
   } catch (error) {
     console.log("create Post error: ", error);
