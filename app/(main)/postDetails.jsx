@@ -24,6 +24,7 @@ import Icon from "../../assets/icons";
 import CommentItem from "../../components/CommentItem";
 import { userService } from "../../services/userService";
 import { supabase } from "../../lib/superbase";
+import Header from "../../components/Header";
 
 const PostDetails = () => {
   const { user } = useAuth();
@@ -139,6 +140,9 @@ const PostDetails = () => {
   }
   return (
     <ScreenWrapper bg={"white"}>
+      <View style={{ paddingHorizontal: wp(4) }}>
+        <Header title={"Post"} />
+      </View>
       <View style={styles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}
