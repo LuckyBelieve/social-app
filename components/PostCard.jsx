@@ -36,10 +36,19 @@ const tagStyle = {
   },
 };
 
-const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
+const PostCard = ({
+  item,
+  currentUser,
+  router,
+  hasShadow = true,
+  showMoreIcon = true,
+}) => {
   const player = useVideoPlayer(getSupabaseUrl(item?.file));
 
-  const openPostDetails = () => {};
+  const openPostDetails = () => {
+    if (!showMoreIcon) return null;
+    router.push({ pathname: "postDetails", params: { postId: item?.id } });
+  };
 
   const createdAt = moment(item.created_at).format("MMM D");
   const [likes, setLikes] = useState([]);
@@ -53,7 +62,9 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
 
   const onLike = async () => {
     if (liked) {
-      let updatedLikes = likes?.filter((like) => like.userId !== currentUser.id);
+      let updatedLikes = likes?.filter(
+        (like) => like.userId !== currentUser.id
+      );
 
       setLikes([...updatedLikes]);
 
@@ -82,15 +93,14 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
 
   // sharing the posts
   const onShare = async () => {
-    let content = { message: stripHtmlTags(item.body),url:"" };
+    let content = { message: stripHtmlTags(item.body), url: "" };
     if (item?.file) {
       setShareLoading(true);
       let url = await downloadFile(getSupabaseUrl(item?.file).uri);
       setShareLoading(false);
       content.url = url;
     }
-    console.log("content: ",content);
-    
+
     Share.share(content);
   };
 
@@ -109,13 +119,15 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
             <Text style={styles.postTime}>{createdAt}</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={openPostDetails}>
-          <Icon
-            name={"threeDotsHorizontal"}
-            strokeWidth={3}
-            color={theme.colors.text}
-          />
-        </TouchableOpacity>
+        {showMoreIcon && (
+          <TouchableOpacity onPress={openPostDetails}>
+            <Icon
+              name={"threeDotsHorizontal"}
+              strokeWidth={3}
+              color={theme.colors.text}
+            />
+          </TouchableOpacity>
+        )}
       </View>
       {/* post and media */}
       <View style={styles.content}>
@@ -163,10 +175,10 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
           <Text style={styles.count}>{likes?.length}</Text>
         </View>
         <View style={styles.footerButton}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={openPostDetails}>
             <Icon name={"comment"} size={24} color={theme.colors.textLight} />
           </TouchableOpacity>
-          <Text style={styles.count}>{0}</Text>
+          <Text style={styles.count}>{item?.comments[0]?.count}</Text>
         </View>
         <View style={styles.footerButton}>
           {shareLoading ? (

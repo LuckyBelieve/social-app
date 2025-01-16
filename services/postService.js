@@ -29,7 +29,7 @@ export const fetchPosts = async (limit = 10) => {
   try {
     const { data } = await supabase
       .from("posts")
-      .select("*,user:users(id,name,image),postLikes (*)")
+      .select("*,user:users(id,name,image),postLikes (*),comments (count)")
       .order("created_at", { ascending: false })
       .limit(limit);
 
@@ -67,5 +67,45 @@ export const removePostLike = async (postId, userId) => {
   } catch (error) {
     console.log("Like error: ", error);
     return { success: false, msg: "could not remove the post like" };
+  }
+};
+
+// getting a single post
+
+export const fetchSinglePosts = async (postId) => {
+  try {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        "*,user:users(id,name,image),postLikes (*),comments (*, user: users(id,name,image))"
+      )
+      .eq("id", postId)
+      .order("created_at", { ascending: false, referencedTable: "comments" })
+      .single();
+
+    if (error) {
+      console.log(error);
+    }
+
+    if (data) return { success: true, data: data };
+  } catch (error) {
+    console.log("get Post error: ", error);
+    return { success: false, msg: "could not get your post" };
+  }
+};
+
+// comment creation
+export const createComment = async (comment) => {
+  try {
+    const { data } = await supabase
+      .from("comments")
+      .insert(comment)
+      .select()
+      .single();
+
+    if (data) return { success: true, data: data };
+  } catch (error) {
+    console.log("Like error: ", error);
+    return { success: false, msg: "could not create the post comment" };
   }
 };
