@@ -25,15 +25,26 @@ export const createUpdatePost = async (post) => {
   }
 };
 
-export const fetchPosts = async (limit = 10) => {
+export const fetchPosts = async (limit = 10, userId) => {
   try {
-    const { data } = await supabase
-      .from("posts")
-      .select("*,user:users(id,name,image),postLikes (*),comments (count)")
-      .order("created_at", { ascending: false })
-      .limit(limit);
+    if (userId) {
+      const { data } = await supabase
+        .from("posts")
+        .select("*,user:users(id,name,image),postLikes (*),comments (count)")
+        .eq("userId", userId)
+        .order("created_at", { ascending: false })
+        .limit(limit);
 
-    if (data) return { success: true, data: data };
+      if (data) return { success: true, data: data };
+    } else {
+      const { data } = await supabase
+        .from("posts")
+        .select("*,user:users(id,name,image),postLikes (*),comments (count)")
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (data) return { success: true, data: data };
+    }
   } catch (error) {
     console.log("create Post error: ", error);
     return { success: false, msg: "could not create your post" };
@@ -117,7 +128,7 @@ export const removeComment = async (commentId) => {
     const { error } = await supabase
       .from("comments")
       .delete()
-      .eq("id", commentId)
+      .eq("id", commentId);
 
     if (!error) return { success: true };
   } catch (error) {
@@ -128,10 +139,7 @@ export const removeComment = async (commentId) => {
 
 export const removePost = async (postId) => {
   try {
-    const { error } = await supabase
-      .from("posts")
-      .delete()
-      .eq("id", postId)
+    const { error } = await supabase.from("posts").delete().eq("id", postId);
 
     if (!error) return { success: true };
   } catch (error) {
@@ -139,4 +147,3 @@ export const removePost = async (postId) => {
     return { success: false, msg: "could not delete post" };
   }
 };
-

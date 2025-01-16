@@ -129,7 +129,6 @@ const home = () => {
           )}
           onEndReached={() => {
             getPosts();
-            console.log("got to the end");
           }}
           onEndReachedThreshold={0}
           ListFooterComponent={

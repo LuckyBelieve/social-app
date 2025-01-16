@@ -1,12 +1,13 @@
 import {
   Alert,
+  FlatList,
   Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "expo-router";
@@ -16,10 +17,30 @@ import Icon from "../../assets/icons";
 import { theme } from "../../constants/theme";
 import { supabase } from "../../lib/superbase";
 import Avatar from "../../components/Avatar";
+import { fetchPosts } from "../../services/postService";
+import PostCard from "../../components/PostCard";
+import Loading from "../../components/Loading";
 
+let limit = 0;
 const Profile = () => {
   const { setAuth, user } = useAuth();
   const router = useRouter();
+
+  const [posts, setPosts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+
+  // fetching the posts
+  const getPosts = async () => {
+    if (!hasMore) return null;
+    limit = limit + 3;
+
+    const res = await fetchPosts(limit);
+
+    if (res.success) {
+      if (posts.length === res.data.length) setHasMore(false);
+      setPosts(res.data);
+    }
+  };
 
   const onLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -44,7 +65,41 @@ const Profile = () => {
   };
   return (
     <ScreenWrapper bg={"white"}>
-      <UserHeader user={user} router={router} handleLogout={handleLogout} />
+      <View style={{ paddingHorizontal: wp(4) }}>
+        <Header title={"Profile"} mb={30} />
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Icon name={"logout"} color={theme.colors.rose} />
+        </TouchableOpacity>
+      </View>
+      {/* posts */}
+      <FlatList
+        data={posts}
+        ListHeaderComponent={
+          <UserHeader user={user} router={router} handleLogout={handleLogout} />
+        }
+        ListHeaderComponentStyle={{ marginBottom: 20 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listStyle}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <PostCard item={item} currentUser={user} router={router} />
+        )}
+        onEndReached={() => {
+          getPosts();
+        }}
+        onEndReachedThreshold={0}
+        ListFooterComponent={
+          hasMore ? (
+            <View style={{ marginVertical: posts.length === 0 ? 200 : 30 }}>
+              <Loading />
+            </View>
+          ) : (
+            <View style={{ marginVertical: 30 }}>
+              <Text style={styles.noPosts}>no more posts</Text>
+            </View>
+          )
+        }
+      />
     </ScreenWrapper>
   );
 };
@@ -52,14 +107,12 @@ const Profile = () => {
 const UserHeader = ({ user, router, handleLogout }) => {
   return (
     <View
-      style={{ flex: 1, backgroundColor: "white", paddingHorizontal: wp(4) }}
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        paddingHorizontal: wp(4),
+      }}
     >
-      <View>
-        <Header title={"Profile"} mb={30} />
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Icon name={"logout"} color={theme.colors.rose} />
-        </TouchableOpacity>
-      </View>
       <View style={styles.container}>
         <View style={{ gap: 15 }}>
           <View style={styles.avatarContainer}>
@@ -68,7 +121,10 @@ const UserHeader = ({ user, router, handleLogout }) => {
               size={hp(12)}
               rounded={theme.radius.xxl * 1.4}
             />
-            <Pressable style={styles.editIcon} onPress={()=>router.push("/editProfile")}>
+            <Pressable
+              style={styles.editIcon}
+              onPress={() => router.push("/editProfile")}
+            >
               <Icon name={"edit"} strokeWidth={2.5} size={20} />
             </Pressable>
           </View>
@@ -150,7 +206,7 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     position: "absolute",
-    right: 0,
+    right: wp(4),
     padding: 5,
     borderRadius: theme.radius.sm,
     backgroundColor: "#fee2e2",
