@@ -12,6 +12,7 @@ import {
   createComment,
   fetchSinglePosts,
   removeComment,
+  removePost,
 } from "../../services/postService";
 import { hp, wp } from "../../helpers/common";
 import { theme } from "../../constants/theme";
@@ -119,6 +120,20 @@ const PostDetails = () => {
     }
   };
 
+  // deleting the post
+
+  const onDeletePost = async (post) => {
+    let res = await removePost(post?.id);
+    if (res.success) router.back();
+    else {
+      Alert.alert("Post deletion", "could not delete the post");
+    }
+  };
+
+  // editing post
+  const onEditPost = (post) => {
+    console.log(post);
+  };
   if (loading) {
     return (
       <View style={styles.center}>
@@ -155,6 +170,9 @@ const PostDetails = () => {
               router={router}
               hasShadow={false}
               showMoreIcon={false}
+              showDelete
+              onDelete={onDeletePost}
+              onEdit={onEditPost}
             />
           }
           {/* comment section */}

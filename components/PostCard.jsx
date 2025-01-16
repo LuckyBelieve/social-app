@@ -42,6 +42,9 @@ const PostCard = ({
   router,
   hasShadow = true,
   showMoreIcon = true,
+  showDelete = false,
+  onDelete,
+  onEdit,
 }) => {
   const player = useVideoPlayer(getSupabaseUrl(item?.file));
 
@@ -104,6 +107,21 @@ const PostCard = ({
     Share.share(content);
   };
 
+  // deleting the post alert
+  const handleDeletePost = () => {
+    Alert.alert("Confirm", "Are you sure you to delete this post", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => onDelete(item),
+        style: "destructive",
+      },
+    ]);
+  };
+
   return (
     <View style={[styles.container, hasShadow && styles.shadowStyles]}>
       <View style={styles.header}>
@@ -127,6 +145,20 @@ const PostCard = ({
               color={theme.colors.text}
             />
           </TouchableOpacity>
+        )}
+        {showDelete && currentUser.id === item.userId && (
+          <View style={styles.actions}>
+            <TouchableOpacity onPress={() => onEdit(item)}>
+              <Icon name={"edit"} strokeWidth={2.5} color={theme.colors.text} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDeletePost}>
+              <Icon
+                name={"delete"}
+                strokeWidth={2.5}
+                color={theme.colors.rose}
+              />
+            </TouchableOpacity>
+          </View>
         )}
       </View>
       {/* post and media */}
@@ -172,7 +204,7 @@ const PostCard = ({
               color={liked ? theme.colors.rose : theme.colors.textLight}
             />
           </TouchableOpacity>
-          <Text style={styles.count}>{likes?.length}</Text>
+          <Text style={styles.count}>{likes.length}</Text>
         </View>
         <View style={styles.footerButton}>
           <TouchableOpacity onPress={openPostDetails}>

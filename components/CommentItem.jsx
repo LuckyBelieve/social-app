@@ -13,7 +13,6 @@ const CommentItem = ({ item, canDelete = false, onDelete }) => {
     Alert.alert("Confirm", "Are you sure you to delete this comment", [
       {
         text: "Cancel",
-        onPress: console.log("cancelled deletion"),
         style: "cancel",
       },
       {
