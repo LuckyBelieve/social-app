@@ -6,9 +6,17 @@ import Avatar from "./Avatar";
 import moment from "moment";
 import Icon from "../assets/icons";
 
-const CommentItem = ({ item, canDelete = false, onDelete }) => {
+const CommentItem = ({
+  item,
+  canDelete = false,
+  onDelete,
+  highlight = false,
+}) => {
+  console.log("commentId:",item?.id);
+  
+  console.log(highlight);
+  
   const createdAt = moment(item?.create_at).format("MMM d");
-
   const handleDelete = () => {
     Alert.alert("Confirm", "Are you sure you to delete this comment", [
       {
@@ -25,7 +33,7 @@ const CommentItem = ({ item, canDelete = false, onDelete }) => {
   return (
     <View style={styles.container}>
       <Avatar uri={item?.user?.image} />
-      <View style={styles.content}>
+      <View style={[styles.content, highlight && styles.hightlight]}>
         <View
           style={{
             flexDirection: "row",

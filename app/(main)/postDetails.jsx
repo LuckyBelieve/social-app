@@ -26,10 +26,13 @@ import CommentItem from "../../components/CommentItem";
 import { userService } from "../../services/userService";
 import { supabase } from "../../lib/superbase";
 import Header from "../../components/Header";
+import { createNotification } from "../../services/notificationService";
 
 const PostDetails = () => {
   const { user } = useAuth();
-  const { postId } = useLocalSearchParams();
+  const { postId, commentId } = useLocalSearchParams();
+  console.log(typeof commentId);
+  
   const [post, setPost] = useState(null);
   const router = useRouter();
 
@@ -40,7 +43,6 @@ const PostDetails = () => {
   const [sendLoading, setSendLoading] = useState(false);
 
   const handleNewCommentEvent = async (payload) => {
-    console.log("got new comment", payload);
     if (payload.eventType === "INSERT" && payload?.new) {
       let newComment = { ...payload.new, user: {} };
       let res = await userService(newComment.userId);
@@ -97,6 +99,16 @@ const PostDetails = () => {
     const res = await createComment(data);
     setSendLoading(false);
     if (res.success) {
+      if (user.id !== post.userId) {
+        // send the notification
+        let notify = {
+          senderId: user?.id,
+          receiverId: post?.userId,
+          title: "commented on your post",
+          data: JSON.stringify({ postId: post.id, commentId: res?.data?.id }),
+        };
+        createNotification(notify);
+      }
       inputRef?.current?.clear();
       commentRef.current = "";
     } else {
@@ -204,6 +216,7 @@ const PostDetails = () => {
               <CommentItem
                 key={idx}
                 item={comment}
+                highlight={comment.id === parseInt(commentId)}
                 canDelete={
                   user?.id == comment?.userId || user?.id == post?.userId
                 }
