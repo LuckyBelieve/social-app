@@ -109,3 +109,19 @@ export const createComment = async (comment) => {
     return { success: false, msg: "could not create the post comment" };
   }
 };
+
+// comment deletion
+
+export const removeComment = async (commentId) => {
+  try {
+    const { error } = await supabase
+      .from("comments")
+      .delete()
+      .eq("id", commentId)
+
+    if (!error) return { success: true };
+  } catch (error) {
+    console.log("Like error: ", error);
+    return { success: false, msg: "could not delete comment" };
+  }
+};
