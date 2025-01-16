@@ -132,7 +132,7 @@ const PostDetails = () => {
 
   // editing post
   const onEditPost = (post) => {
-    console.log(post);
+    router.push({ pathname: "newPost", params: { ...post } });
   };
   if (loading) {
     return (
