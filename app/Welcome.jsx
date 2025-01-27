@@ -8,7 +8,7 @@ import Button from "../components/Button";
 import { useRouter } from "expo-router";
 
 const Welcome = () => {
-    const router = useRouter();
+  const router = useRouter();
   return (
     <ScreenWrapper bg={"white"}>
       <StatusBar style="dark" />

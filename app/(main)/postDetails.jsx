@@ -32,7 +32,7 @@ const PostDetails = () => {
   const { user } = useAuth();
   const { postId, commentId } = useLocalSearchParams();
   console.log(typeof commentId);
-  
+
   const [post, setPost] = useState(null);
   const router = useRouter();
 

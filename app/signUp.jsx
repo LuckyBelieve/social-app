@@ -19,8 +19,8 @@ const SignUp = () => {
   const [loading, setIsLoading] = useState(false);
 
   const onSubmit = async () => {
-    if(!emailRef.current || !passwordRef.current){
-      Alert.alert("Sign up","Please fill all fields");
+    if (!emailRef.current || !passwordRef.current) {
+      Alert.alert("Sign up", "Please fill all fields");
       return;
     }
     // good to go
@@ -30,24 +30,24 @@ const SignUp = () => {
 
     setIsLoading(true);
 
-    const {data:{session},error} = await supabase.auth.signUp({
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
       email,
       password,
-      options:{
-        data:{
-          name
-        }
-      }
-    })
+      options: {
+        data: {
+          name,
+        },
+      },
+    });
 
     setIsLoading(false);
     if (error) {
-      Alert.alert("Sign Up",error.message);
+      Alert.alert("Sign Up", error.message);
       setIsLoading(false);
     }
-    
-    
-
   };
   return (
     <ScreenWrapper bg={"white"}>
@@ -80,13 +80,13 @@ const SignUp = () => {
             secureTextEntry
             onChangeText={(text) => (passwordRef.current = text)}
           />
-          
+
           <Button title="Sign Up" onpress={onSubmit} loading={loading} />
         </View>
         {/* footer */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already have an account?</Text>
-          <Pressable onPress={()=>router.push("login")}>
+          <Pressable onPress={() => router.push("login")}>
             <Text
               style={[
                 styles.footerText,

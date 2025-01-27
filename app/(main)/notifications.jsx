@@ -22,18 +22,22 @@ const Notifications = () => {
     let res = await fetchNotifications(user?.id);
     if (res.success) setNotifications(res.data);
   };
-  
+
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-      <Header title={"Notifications"}/>
+        <Header title={"Notifications"} />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listStyle}
         >
           {notifications.map((notification) => {
             return (
-              <NotificationItem item={notification} key={notification?.id} router={router} />
+              <NotificationItem
+                item={notification}
+                key={notification?.id}
+                router={router}
+              />
             );
           })}
           {notifications.length == 0 && (

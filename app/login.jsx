@@ -17,9 +17,9 @@ const login = () => {
   const passwordRef = React.useRef();
   const [loading, setIsLoading] = useState(false);
 
-  const onSubmit = async() => {
-    if(!emailRef.current || !passwordRef.current){
-      Alert.alert("Login","Please fill all fields");
+  const onSubmit = async () => {
+    if (!emailRef.current || !passwordRef.current) {
+      Alert.alert("Login", "Please fill all fields");
       return;
     }
     // good to go
@@ -27,15 +27,18 @@ const login = () => {
     const password = passwordRef.current.trim();
 
     setIsLoading(true);
-    const { error,data:{session} } = await supabase.auth.signInWithPassword({
+    const {
+      error,
+      data: { session },
+    } = await supabase.auth.signInWithPassword({
       email,
-      password
+      password,
     });
     setIsLoading(false);
 
-    console.log("session: ",session);
-    if(error){
-      Alert.alert("Login",error.message);
+    console.log("session: ", session);
+    if (error) {
+      Alert.alert("Login", error.message);
       setIsLoading(false);
     }
   };
@@ -71,7 +74,7 @@ const login = () => {
         {/* footer */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>Don't have an account?</Text>
-          <Pressable onPress={()=>router.push("signUp")}>
+          <Pressable onPress={() => router.push("signUp")}>
             <Text
               style={[
                 styles.footerText,

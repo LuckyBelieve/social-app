@@ -41,6 +41,6 @@ const MainLayout = () => {
       setUserData({ ...res.data, email });
     }
   };
-  return <Stack screenOptions={{ headerShown: false }}/>;
+  return <Stack screenOptions={{ headerShown: false }} />;
 };
 export default _layout;
