@@ -1,4 +1,11 @@
-import { Pressable, StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  Touchable,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { theme } from "../constants/theme";
 import { hp } from "../helpers/common";
@@ -22,10 +29,10 @@ const Button = ({
     shadowRadius: 8,
     elevation: 4,
   };
-  if(loading){
+  if (loading) {
     return (
-      <View style={[styles.button, buttonStyle,{backgroundColor:"white"}]}>
-        <Loading/>
+      <View style={[styles.button, buttonStyle, { backgroundColor: "white" }]}>
+        <Loading />
       </View>
     );
   }
@@ -34,7 +41,7 @@ const Button = ({
       onPress={onpress}
       style={[styles.button, buttonStyle, hasShadow && shadowStyle]}
     >
-      <Text style={[styles.text,textStyle]}>{title}</Text>
+      <Text style={[styles.text, textStyle]}>{title}</Text>
     </Pressable>
   );
 };

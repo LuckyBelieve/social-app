@@ -22,17 +22,16 @@ const Input = (props) => {
 export default Input;
 
 const styles = StyleSheet.create({
-    container:{
-        flexDirection:"row",
-        height:hp(7.2),
-        alignItems:"center",
-        justifyContent:"center",
-        borderWidth:1,
-        borderColor:theme.colors.text,
-        borderRadius:theme.radius.xl,
-        borderCurve:"continuous",
-        paddingHorizontal:10,
-        gap:12
-
-    }
+  container: {
+    flexDirection: "row",
+    height: hp(7.2),
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: theme.colors.text,
+    borderRadius: theme.radius.xl,
+    borderCurve: "continuous",
+    paddingHorizontal: 10,
+    gap: 12,
+  },
 });

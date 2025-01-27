@@ -3,7 +3,7 @@ import React from "react";
 import { hp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import { Image } from "expo-image";
-import {getUserImageSrc} from "@/services/imageService"
+import { getUserImageSrc } from "@/services/imageService";
 
 const Avatar = ({
   uri,
@@ -27,9 +27,9 @@ const Avatar = ({
 export default Avatar;
 
 const styles = StyleSheet.create({
-    avatar:{
-        borderCurve:"continuous",
-        borderColor:theme.colors.darkLight,
-        borderWidth:1
-    }
+  avatar: {
+    borderCurve: "continuous",
+    borderColor: theme.colors.darkLight,
+    borderWidth: 1,
+  },
 });

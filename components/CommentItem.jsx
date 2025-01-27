@@ -12,10 +12,10 @@ const CommentItem = ({
   onDelete,
   highlight = false,
 }) => {
-  console.log("commentId:",item?.id);
-  
+  console.log("commentId:", item?.id);
+
   console.log(highlight);
-  
+
   const createdAt = moment(item?.create_at).format("MMM d");
   const handleDelete = () => {
     Alert.alert("Confirm", "Are you sure you to delete this comment", [
