@@ -17,19 +17,19 @@ export const getSupabaseUrl = (filePath) => {
   };
 };
 
-export const downloadFile = async (url)=>{
+export const downloadFile = async (url) => {
   try {
-    const { uri } = await Filesystem.downloadAsync(url,getLocalPath(url));
+    const { uri } = await Filesystem.downloadAsync(url, getLocalPath(url));
     return uri;
   } catch (error) {
-    return null
+    return null;
   }
-}
+};
 
-export const getLocalPath = filePath =>{
-  let filename = filePath.split('/').pop();
-  return `${Filesystem.documentDirectory}${filename}`
-}
+export const getLocalPath = (filePath) => {
+  let filename = filePath.split("/").pop();
+  return `${Filesystem.documentDirectory}${filename}`;
+};
 
 export const uploadFile = async (folderName, fileUrl, isImage = true) => {
   try {
