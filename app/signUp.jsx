@@ -1,15 +1,14 @@
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import ScreenWrapper from "../components/ScreenWrapper";
-import Home from "../assets/icons/Home";
-import Icon from "../assets/icons";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import Icon from "../assets/icons";
 import BackButton from "../components/BackButton";
-import { router, useRouter } from "expo-router";
-import { hp, wp } from "../helpers/common";
-import { theme } from "../constants/theme";
-import Input from "../components/Input";
 import Button from "../components/Button";
+import Input from "../components/Input";
+import ScreenWrapper from "../components/ScreenWrapper";
+import { theme } from "../constants/theme";
+import { hp, wp } from "../helpers/common";
 import { supabase } from "../lib/superbase";
 
 const SignUp = () => {

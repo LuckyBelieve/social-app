@@ -16,25 +16,24 @@ export const createNotification = async (notification) => {
 };
 
 export const fetchNotifications = async (receiverId) => {
-    try {
-      const { data, error } = await supabase
-        .from("notifications")
-        .select(
-          `*,
+  try {
+    const { data, error } = await supabase
+      .from("notifications")
+      .select(
+        `*,
           sender: senderId(id,name,image)
           `
-        )
-        .eq("receiverId", receiverId)
-        .order("created_at", { ascending: false })
-  
-      if (error) {
-        console.log(error);
-      }
+      )
+      .eq("receiverId", receiverId)
+      .order("created_at", { ascending: false });
 
-  
-      if (data) return { success: true, data: data };
-    } catch (error) {
-      console.log("get notifications error: ", error);
-      return { success: false, msg: "could not get your post" };
+    if (error) {
+      console.log(error);
     }
-  };
+
+    if (data) return { success: true, data: data };
+  } catch (error) {
+    console.log("get notifications error: ", error);
+    return { success: false, msg: "could not get your post" };
+  }
+};

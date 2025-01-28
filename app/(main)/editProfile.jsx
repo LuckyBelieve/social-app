@@ -23,7 +23,7 @@ import { useRouter } from "expo-router";
 
 const EditProfile = () => {
   const router = useRouter();
-  const { user: currentUser,setUserData } = useAuth();
+  const { user: currentUser, setUserData } = useAuth();
 
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -69,16 +69,16 @@ const EditProfile = () => {
     }
     setLoading(true);
 
-    if(typeof user.image === "object"){
-      let imageRes = await uploadFile("profiles",image?.uri,true);
-      if(imageRes.success) userData.image = imageRes.data
-      else userData.image = null
+    if (typeof user.image === "object") {
+      let imageRes = await uploadFile("profiles", image?.uri, true);
+      if (imageRes.success) userData.image = imageRes.data;
+      else userData.image = null;
     }
     const res = await updateUser(currentUser?.id, userData);
     setLoading(false);
 
-    if(res.success){
-      setUserData({...currentUser,...userData});
+    if (res.success) {
+      setUserData({ ...currentUser, ...userData });
       router.back();
     }
   };
