@@ -1,12 +1,10 @@
+import React from "react";
 import {
   Pressable,
   StyleSheet,
   Text,
-  Touchable,
-  TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import React from "react";
 import { theme } from "../constants/theme";
 import { hp } from "../helpers/common";
 import Loading from "./Loading";
